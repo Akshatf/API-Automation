@@ -1,5 +1,5 @@
 # Reqres API Automation Assignment using Playwright
-
+ 
 ## Overview
 
 This repository contains automated API tests for the **Reqres** demo service, implemented using **Playwright Test**.
