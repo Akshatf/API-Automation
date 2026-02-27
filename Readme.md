@@ -6,17 +6,18 @@ This repository contains automated API tests for the **Reqres** demo service, im
 
 Public API under test: `https://reqres.in/`
 
-The test suite currently covers the following HTTP operations end‑to‑end:
+The test suite currently covers the following HTTP operations end-to-end:
 
 - **Create User (POST)**
 - **Fetch User Details (GET)**
 - **Update User (PUT)**
+- **Delete User (DELETE)**
 
 The test suite validates HTTP status codes and response data to ensure correct API behavior.
 
 ---
 
-##  API Operations Covered
+## API Operations Covered
 
 ### Create User (POST)
 
@@ -48,7 +49,7 @@ The test suite validates HTTP status codes and response data to ensure correct A
 
 ### Update User (PUT)
 
-- Updates user details (name and job)
+- Updates the same user that was created in the POST request
 - Validates HTTP status code `200`
 - Confirms updated response values
 - Prints selected fields:
@@ -57,6 +58,14 @@ The test suite validates HTTP status codes and response data to ensure correct A
   - email
   - phone
   - updatedAt
+
+---
+
+### Delete User (DELETE)
+
+- Deletes the same user that was created earlier
+- Validates HTTP status code `204`
+- Confirms successful deletion of the user using the stored `userId`
 
 ---
 
@@ -110,7 +119,7 @@ project-root/
 
 ---
 
-##  How to Run the Project
+## How to Run the Project
 
 ### Install Dependencies
 
@@ -142,6 +151,7 @@ npx playwright show-report
 - Clean and structured logging
 
 ---
+
 ## 🖼 Result Snapshots
 
 ### Successful Execution
@@ -149,12 +159,5 @@ npx playwright show-report
 
 ### Detailed HTML Report
 ![HTML report](snapshots/image2.png)
-
-
-## Note
-
-Reqres is a mock API service.
-Data created using POST requests is not permanently stored.  
-Therefore, dynamically created users may not be retrievable using GET requests.
 
 ---
