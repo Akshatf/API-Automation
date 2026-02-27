@@ -1,73 +1,106 @@
-const { test, expect } = require('@playwright/test');
-const { createUserData, updatedUserData } = require('../data/userData');
+const { test, expect } = require("@playwright/test");
+const { createUserData, updatedUserData } = require("../data/userData");
 
-test('Create, Get, Update User', async ({ request }) => {
+test.describe("Reqres User API Test", () => {
 
-  console.log("Starting Test");
+  var userid;
 
-  // Create the user (POST)
-  const createRes = await request.post('/api/users', {
-    data: createUserData
-  });
+  test("Get User", async ({ request }) => {
 
-  const createBody = await createRes.json();
+    console.log("Starting GET User Test");
 
-  // validating that user is created
-  expect(createRes.status()).toBe(201);
+    const response = await request.get("https://reqres.in/api/users/1");
+    const body = await response.json();
 
-  const userId = createBody.id;
+    expect(response.status()).toBe(200);
 
-  // Printing only required fields
-  const createdUserDetails = {
-    name: createBody.name,
-    job: createBody.job,
-    email: createUserData.email, 
-    phone: createUserData.phone,   
-    id: createBody.id,
-    createdAt: createBody.createdAt
-  };
+    console.log("Successfully Fetched User:");
+    console.log({
+      id: body.data.id,
+      email: body.data.email,
+      first_name: body.data.first_name,
+      last_name: body.data.last_name
+    });
 
-  // priting the user which is created
-  console.log(" Successfully Created User:");
-  console.log(createdUserDetails);
-
-
-  // GET user
-  const getdata = await request.get('/api/users/2');
-  const getuserdata = await getdata.json();
-
-  // validating that data is fetched
-  expect(getdata.status()).toBe(200);
-
-  console.log(" Successfully Fetched User");
-  console.log({
-    id: getuserdata.data.id,
-    email: getuserdata.data.email,
-    first_name: getuserdata.data.first_name,
-    last_name: getuserdata.data.last_name
   });
 
 
-  // UPDATE USER
-  const updateRes = await request.put(`/api/users/${userId}`, {
-    data: updatedUserData
+  test("Create User", async ({ request }) => {
+
+    console.log("Starting CREATE User Test");
+
+    const response = await request.post("https://reqres.in/api/users", {
+      data: createUserData,
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const res = await response.json();
+
+    expect(response.status()).toBe(201);
+
+    userid = res.id;
+
+    const createdUserDetails = {
+      name: res.name,
+      job: res.job,
+      email: createUserData.email,
+      phone: createUserData.phone,
+      id: res.id,
+      createdAt: res.createdAt
+    };
+
+    console.log("Successfully Created User:");
+    console.log(createdUserDetails);
+
   });
 
-  const updateBody = await updateRes.json();
 
-  // validating data is updated successfully
-  expect(updateRes.status()).toBe(200);
+  test("Update User", async ({ request }) => {
 
-  const updatedUserDetails = {
-    name: updateBody.name,
-    job: updateBody.job,
-    email: updatedUserData.email,
-    phone: updatedUserData.phone,
-    updatedAt: updateBody.updatedAt
-  };
+    console.log("Starting UPDATE User Test");
 
-  console.log(" Successfully Updated User:");
-  console.log(updatedUserDetails);
+    const response = await request.put(
+      "https://reqres.in/api/users/" + userid,
+      {
+        data: updatedUserData,
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
 
-  console.log("Test Completed");
+    const res = await response.json();
+
+    expect(response.status()).toBe(200);
+
+    const updatedUserDetails = {
+      name: res.name,
+      job: res.job,
+      email: updatedUserData.email,
+      phone: updatedUserData.phone,
+      updatedAt: res.updatedAt
+    };
+
+    console.log("Successfully Updated User:");
+    console.log(updatedUserDetails);
+
+  });
+
+
+  test("Delete User", async ({ request }) => {
+
+    console.log("Starting DELETE User Test");
+
+    const response = await request.delete(
+      "https://reqres.in/api/users/" + userid
+    );
+
+    expect(response.status()).toBe(204);
+
+    console.log("Successfully Deleted User with ID:", userid);
+
+  });
+
 });
